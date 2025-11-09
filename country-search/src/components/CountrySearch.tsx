@@ -4,6 +4,9 @@ import type { SelectedLocation, Country } from '../model/country';
 import CountryResults from './CountryResults';
 import StateResults from './StateResults';
 import CityResults from './CityResults';
+import Tag from './Tag';
+
+import '../index.css';
 
 type LocationAction = {
   type: 'SET_COUNTRY' | 'SET_STATE' | 'SET_CITY' | 'RESET';
@@ -47,20 +50,29 @@ const CountrySearch = () => {
 
   return (
     <div className="mt-10 text-3xl mx-auto max-w-6xl">
-      <div>Country Search</div>
       {selectedLocation.country === null && (
         <div>
-          <input name="countryName" onChange={handleCountryNameChange} />
-          <CountryResults
-            countries={countries}
-            onSelectCountry={(c) => dispatchLocation({ type: 'SET_COUNTRY', payload: c })}
+          <div>Country Search</div>
+          <input
+            name="countryName"
+            onChange={handleCountryNameChange}
+            className="shadow appearance-none border-gray-400 rounded w-full py-2 px-3 mt-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
+          {countries.length > 0 && (
+            <CountryResults
+              countries={countries}
+              onSelectCountry={(c) => dispatchLocation({ type: 'SET_COUNTRY', payload: c })}
+            />
+          )}
         </div>
       )}
       {selectedLocation.country && (
         <div>
-          Selected Country: {selectedLocation.country.name.common}
-          <button onClick={() => dispatchLocation({ type: 'RESET', payload: '' })}>x</button>
+          <Tag
+            name={selectedLocation.country.name.common}
+            onClose={() => dispatchLocation({ type: 'RESET', payload: '' })}
+            color="blue"
+          />
           {selectedLocation.state === null && states.length > 0 && (
             <div>
               <StateResults
@@ -71,10 +83,11 @@ const CountrySearch = () => {
           )}
           {selectedLocation.state && (
             <div>
-              Selected State: {selectedLocation.state}
-              <button onClick={() => dispatchLocation({ type: 'SET_STATE', payload: null })}>
-                x
-              </button>
+              <Tag
+                name={selectedLocation.state}
+                onClose={() => dispatchLocation({ type: 'SET_STATE', payload: null })}
+                color="green"
+              />
               {selectedLocation.city === null && cities.length > 0 && (
                 <CityResults
                   cities={cities}
@@ -93,12 +106,11 @@ const CountrySearch = () => {
               />
             )}
           {selectedLocation.city && (
-            <div>
-              Selected City: {selectedLocation.city}
-              <button onClick={() => dispatchLocation({ type: 'SET_CITY', payload: null })}>
-                x
-              </button>
-            </div>
+            <Tag
+              name={selectedLocation.city}
+              onClose={() => dispatchLocation({ type: 'SET_CITY', payload: null })}
+              color="orange"
+            />
           )}
         </div>
       )}

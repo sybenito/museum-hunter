@@ -1,6 +1,5 @@
 import ReactDOM from 'react-dom/client';
 import CountrySearch from './components/CountrySearch';
-
 import './index.css';
 
 const App = () => (
