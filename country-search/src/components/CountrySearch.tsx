@@ -1,6 +1,6 @@
 import { useReducer, useEffect } from 'react';
 import { useCountries } from '../hooks/useCountries';
-import type { SelectedLocation, Country } from '../model/country';
+import type { SelectedLocation, Country } from '../model/Country';
 import CountryResults from './CountryResults';
 import StateResults from './StateResults';
 import CityResults from './CityResults';

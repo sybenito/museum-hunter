@@ -1,4 +1,4 @@
-import type { Country } from '../model/country';
+import type { Country } from '../model/Country';
 
 type CountryResultsProps = {
   countries: Country[];

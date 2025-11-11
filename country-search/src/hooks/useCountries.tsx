@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import type { Country, CountryResponse, SelectedLocation } from '../model/country';
+import type { Country, CountryResponse, SelectedLocation } from '../model/Country';
 
 const DEBOUNCE_DELAY = 500;
 const REST_COUNTRIES_API = 'https://restcountries.com/v3.1/name';
