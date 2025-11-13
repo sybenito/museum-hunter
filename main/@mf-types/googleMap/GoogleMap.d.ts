@@ -1,2 +1,2 @@
-export * from './compiled-types/components/GoogleMap';
-export { default } from './compiled-types/components/GoogleMap';
+export * from './compiled-types/components/GoogleMap/index';
+export { default } from './compiled-types/components/GoogleMap/index';

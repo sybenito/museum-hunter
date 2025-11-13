@@ -62,7 +62,8 @@ const useCountries = () => {
       .get(url, params)
       .then((response) => {
         const data = response.data.data.states.map((state: { name: string }) => state.name);
-        setStates(['All States', ...data]);
+        console.log('States response:', data);
+        setStates(data);
         if (data.length === 0) {
           fetchCities(selectedLocation);
         }
@@ -83,7 +84,7 @@ const useCountries = () => {
 
     let url = `${COUNTRIES_NOW_API}/cities/q`;
     const params = { country: selectedLocation.country.name.common };
-    if (selectedLocation.state && selectedLocation.state !== 'All States') {
+    if (selectedLocation.state && selectedLocation.state !== 'All States and Provinces') {
       url = `${COUNTRIES_NOW_API}/state/cities/q`;
       Object.assign(params, { state: selectedLocation.state });
     }

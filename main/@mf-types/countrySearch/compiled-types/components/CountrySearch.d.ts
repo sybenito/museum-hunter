@@ -1,3 +1,6 @@
 import '../index.css';
-declare const CountrySearch: () => import("react/jsx-runtime").JSX.Element;
+type CountrySearchProps = {
+    setLocation?: (location: string) => void;
+};
+declare const CountrySearch: ({ setLocation }: CountrySearchProps) => import("react/jsx-runtime").JSX.Element;
 export default CountrySearch;
