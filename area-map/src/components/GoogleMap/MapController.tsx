@@ -23,21 +23,6 @@ const MapController = ({ location }: MapControllerProps) => {
       if (status === google.maps.GeocoderStatus.OK && results && results[0]) {
         const locationViewport = results[0].geometry.viewport;
         map.fitBounds(locationViewport);
-        /*
-        const listener = google.maps.event.addListenerOnce(
-          map,
-          "idle",
-          function () {
-            let currentZoom = map.getZoom();
-
-            if (currentZoom && currentZoom < 15) {
-              map.setZoom(currentZoom + 1);
-            }
-
-            google.maps.event.removeListener(listener);
-          }
-        );
-*/
       } else {
         console.error(
           "Geocode was not successful for the following reason: " + status

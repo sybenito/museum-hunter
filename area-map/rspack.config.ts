@@ -86,6 +86,7 @@ export default defineConfig({
       "process.env.GOOGLE_MAPS_API_KEY": JSON.stringify(
         process.env.GOOGLE_MAPS_API_KEY
       ),
+      "process.env.GOOGLE_MAPS_ID": JSON.stringify(process.env.GOOGLE_MAPS_ID),
     }),
   ].filter(Boolean),
   optimization: {

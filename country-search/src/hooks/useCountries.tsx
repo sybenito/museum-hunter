@@ -62,7 +62,6 @@ const useCountries = () => {
       .get(url, params)
       .then((response) => {
         const data = response.data.data.states.map((state: { name: string }) => state.name);
-        console.log('States response:', data);
         setStates(data);
         if (data.length === 0) {
           fetchCities(selectedLocation);

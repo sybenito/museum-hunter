@@ -60,7 +60,6 @@ const CountrySearch = ({ setLocation }: CountrySearchProps) => {
         .filter((v) => v !== null)
         .join(', ');
 
-      console.log('Setting location string:', locationString);
       setLocation(locationString);
     } else if (setLocation) {
       setLocation('');
