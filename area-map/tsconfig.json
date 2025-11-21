@@ -11,7 +11,6 @@
     "resolveJsonModule": true,
     "moduleResolution": "bundler",
     "useDefineForClassFields": true,
-    "forceConsistentCasingInFileNames": true,
     "allowImportingTsExtensions": true,
     "paths": {
       "*": ["./@mf-types/*"]

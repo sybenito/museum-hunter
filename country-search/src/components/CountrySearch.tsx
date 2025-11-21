@@ -1,12 +1,16 @@
 import { useReducer, useEffect } from 'react';
 import { useCountries } from '../hooks/useCountries';
-import type { SelectedLocation, Country } from '../model/country';
+import type { SelectedLocation, Country } from '../model/Country';
 import CountryResults from './CountryResults';
 import StateResults from './StateResults';
 import CityResults from './CityResults';
 import Tag from './Tag';
 
 import '../index.css';
+
+type CountrySearchProps = {
+  setLocation?: (location: string) => void;
+};
 
 type LocationAction = {
   type: 'SET_COUNTRY' | 'SET_STATE' | 'SET_CITY' | 'RESET';
@@ -19,7 +23,7 @@ const initLocation: SelectedLocation = {
   city: null,
 };
 
-const CountrySearch = () => {
+const CountrySearch = ({ setLocation }: CountrySearchProps) => {
   const { setCountryNameSearch, setSelectedLocation, selectedLocation, countries, states, cities } =
     useCountries();
 
@@ -46,17 +50,31 @@ const CountrySearch = () => {
 
   useEffect(() => {
     setSelectedLocation(location);
+
+    if (setLocation && location.country) {
+      const locationString = [
+        location.country.name.common,
+        location.state && location.state !== 'All States and Provinces' ? location.state : null,
+        location.city,
+      ]
+        .filter((v) => v !== null)
+        .join(', ');
+
+      setLocation(locationString);
+    } else if (setLocation) {
+      setLocation('');
+    }
   }, [location, setSelectedLocation]);
 
   return (
     <div className="mt-10 text-3xl mx-auto max-w-6xl">
       {selectedLocation.country === null && (
         <div>
-          <div>Country Search</div>
           <input
             name="countryName"
             onChange={handleCountryNameChange}
             className="shadow appearance-none border-gray-400 rounded w-full py-2 px-3 mt-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            placeholder="Country Search..."
           />
           {countries.length > 0 && (
             <CountryResults

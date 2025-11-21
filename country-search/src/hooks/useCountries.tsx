@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import type { Country, CountryResponse, SelectedLocation } from '../model/country';
+import type { Country, CountryResponse, SelectedLocation } from '../model/Country';
 
 const DEBOUNCE_DELAY = 500;
 const REST_COUNTRIES_API = 'https://restcountries.com/v3.1/name';
@@ -62,7 +62,7 @@ const useCountries = () => {
       .get(url, params)
       .then((response) => {
         const data = response.data.data.states.map((state: { name: string }) => state.name);
-        setStates(['All States', ...data]);
+        setStates(data);
         if (data.length === 0) {
           fetchCities(selectedLocation);
         }
@@ -83,7 +83,7 @@ const useCountries = () => {
 
     let url = `${COUNTRIES_NOW_API}/cities/q`;
     const params = { country: selectedLocation.country.name.common };
-    if (selectedLocation.state && selectedLocation.state !== 'All States') {
+    if (selectedLocation.state && selectedLocation.state !== 'All States and Provinces') {
       url = `${COUNTRIES_NOW_API}/state/cities/q`;
       Object.assign(params, { state: selectedLocation.state });
     }

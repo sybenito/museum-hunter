@@ -1,8 +1,8 @@
 export const mfConfig = {
-  name: 'countrySearch',
-  filename: 'remoteEntry.js',
+  name: "googleMap",
+  filename: "remoteEntry.js",
   exposes: {
-    './CountrySearch': './src/components/CountrySearch',
+    "./GoogleMap": "./src/components/GoogleMap",
   },
   shared: {
     react: {
@@ -11,7 +11,7 @@ export const mfConfig = {
       strictVersion: false,
       eager: true,
     },
-    'react-dom': {
+    "react-dom": {
       singleton: true,
       requiredVersion: false as const,
       strictVersion: false,
