@@ -6,9 +6,11 @@ type CountryResultsProps = {
 };
 
 const CountryResults = ({ countries, onSelectCountry }: CountryResultsProps) => {
+  const countriesSorted = [...countries].sort((a, b) => a.name.common.localeCompare(b.name.common));
+
   return (
     <div className="border border-gray-300 rounded mt-2 max-h-60 overflow-y-auto">
-      {countries.map((country) => (
+      {countriesSorted.map((country) => (
         <div
           key={country.name.common}
           className="p-2 hover:bg-gray-100 cursor-pointer"

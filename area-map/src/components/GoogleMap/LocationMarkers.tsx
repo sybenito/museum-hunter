@@ -6,21 +6,80 @@ interface PlaceData {
   id: string;
   displayName: string;
   location: google.maps.LatLngLiteral;
+  addressComponents?: google.maps.GeocoderAddressComponent[];
+  businessStatus?: google.maps.places.BusinessStatus;
+  photos?: google.maps.places.PlacePhoto[];
+  priceLevel?: google.maps.places.PriceLevel;
+  rating?: number;
 }
 
 const MAX_RESULT_COUNT = 100;
+const SEARCH_DEBOUNCE_MS = 500;
 const DEFAULT_TEXT_QUERY = "museum";
 const DEFAULT_LOCATION_TYPE = "museum";
+const SEARCH_BY_TEXT_RETURN_FIELDS = [
+  "displayName",
+  "location",
+  "id",
+  "addressComponents",
+  "businessStatus",
+  "photos",
+  "priceLevel",
+  "rating",
+];
 
 const LocationMarkers: React.FC = () => {
   const map = useMap();
-  const [museums, setMuseums] = useState<PlaceData[]>([]);
+  let debounceTimeout: NodeJS.Timeout;
+  const [museums, setMuseums] = useState<Map<string, PlaceData>>(new Map());
   const [searchTrigger, setSearchTrigger] = useState(0);
+
+  const performPlacesSearch = () => {
+    if (!map) return;
+
+    const bounds = map.getBounds();
+    if (!bounds) return;
+
+    google.maps.places.Place.searchByText({
+      textQuery: DEFAULT_TEXT_QUERY,
+      includedType: DEFAULT_LOCATION_TYPE,
+      maxResultCount: MAX_RESULT_COUNT,
+      locationRestriction: bounds,
+      fields: SEARCH_BY_TEXT_RETURN_FIELDS,
+    })
+      .then(({ places }) => {
+        const newPlaces = new Map<string, PlaceData>();
+
+        places.forEach((place) => {
+          if (!museums.has(place.id) && place.location) {
+            const newPlace = {
+              id: place.id,
+              displayName: place.displayName || "Unnamed Museum",
+              location: place.location!.toJSON(),
+              addressComponents: place.addressComponents,
+              businessStatus: place.businessStatus,
+              photos: place.photos,
+              priceLevel: place.priceLevel,
+              rating: place.rating,
+            } as PlaceData;
+
+            newPlaces.set(place.id, newPlace);
+          }
+        });
+
+        if (newPlaces.size > 0) {
+          setMuseums(new Map([...museums, ...newPlaces]));
+        }
+      })
+      .catch((error) => {
+        console.error("Places Search error:", error);
+      });
+  };
 
   useEffect(() => {
     if (!map) return;
 
-    // Add a listener to re-run the search when the map stops moving
+    // re-run the search when the map stops moving
     const idleListener = map.addListener("idle", () =>
       setSearchTrigger((c) => c + 1)
     );
@@ -31,34 +90,21 @@ const LocationMarkers: React.FC = () => {
   }, [map]);
 
   useEffect(() => {
-    if (!map || !google.maps.places || searchTrigger === 0) return;
+    if (!google.maps.places || searchTrigger === 0) return;
 
-    const bounds = map.getBounds();
-    if (!bounds) return;
+    clearTimeout(debounceTimeout);
+    debounceTimeout = setTimeout(() => {
+      performPlacesSearch();
+    }, SEARCH_DEBOUNCE_MS);
 
-    google.maps.places.Place.searchByText({
-      textQuery: DEFAULT_TEXT_QUERY,
-      includedType: DEFAULT_LOCATION_TYPE,
-      maxResultCount: MAX_RESULT_COUNT,
-      locationRestriction: bounds,
-      fields: ["displayName", "location", "id"],
-    })
-      .then(({ places }) => {
-        const museumResults: PlaceData[] = places.map((place) => ({
-          id: place.id,
-          displayName: place.displayName || "Unnamed Museum",
-          location: place.location!.toJSON(),
-        }));
-        setMuseums(museumResults);
-      })
-      .catch((error) => {
-        console.error("Places Search error:", error);
-      });
-  }, [map, searchTrigger]);
+    return () => {
+      clearTimeout(debounceTimeout);
+    };
+  }, [searchTrigger]);
 
   return (
     <>
-      {museums.map((museum) => (
+      {Array.from(museums.values()).map((museum) => (
         <AdvancedMarker
           key={museum.id}
           position={museum.location}
