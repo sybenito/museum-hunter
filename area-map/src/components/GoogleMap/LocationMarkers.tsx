@@ -1,17 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useMap, AdvancedMarker, Pin } from "@vis.gl/react-google-maps";
+import LocationMarker from "./LocationMarker.tsx";
 
-// Define the type for the data we store about a museum place
-interface PlaceData {
-  id: string;
-  displayName: string;
-  location: google.maps.LatLngLiteral;
-  addressComponents?: google.maps.GeocoderAddressComponent[];
-  businessStatus?: google.maps.places.BusinessStatus;
-  photos?: google.maps.places.PlacePhoto[];
-  priceLevel?: google.maps.places.PriceLevel;
-  rating?: number;
-}
+import type { PlaceData } from "../../models/place.d.ts";
 
 const MAX_RESULT_COUNT = 100;
 const SEARCH_DEBOUNCE_MS = 500;
@@ -105,17 +96,7 @@ const LocationMarkers: React.FC = () => {
   return (
     <>
       {Array.from(museums.values()).map((museum) => (
-        <AdvancedMarker
-          key={museum.id}
-          position={museum.location}
-          title={museum.displayName}
-        >
-          <Pin
-            background={"#FF0000"}
-            glyphColor={"#FFFFFF"}
-            borderColor={"#000000"}
-          />
-        </AdvancedMarker>
+        <LocationMarker key={museum.id} museum={museum} />
       ))}
     </>
   );
