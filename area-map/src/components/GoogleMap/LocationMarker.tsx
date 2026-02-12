@@ -8,10 +8,24 @@ import {
 
 import type { PlaceData } from "../../models/place.d.ts";
 
-const LocationMarker: React.FC<{ museum: PlaceData }> = ({ museum }) => {
+type LocationMarkerProps = {
+  museum: PlaceData;
+  handleMarkerClick?: (museum: PlaceData) => void;
+};
+
+const LocationMarker: React.FC<LocationMarkerProps> = ({
+  museum,
+  handleMarkerClick = () => {},
+}) => {
   const [isInfoWindowVisible, setInfoWindowVisible] = useState(false);
   const [isInfoWindowSelected, setInfoWindowSelected] = useState(false);
   const [markerRef, marker] = useAdvancedMarkerRef();
+
+  useEffect(() => {
+    if (isInfoWindowSelected && !museum.detailsFetched) {
+      handleMarkerClick(museum);
+    }
+  }, [isInfoWindowSelected]);
 
   return (
     <AdvancedMarker
@@ -35,7 +49,9 @@ const LocationMarker: React.FC<{ museum: PlaceData }> = ({ museum }) => {
           headerContent={museum.displayName}
           onCloseClick={() => setInfoWindowSelected(false)}
         >
-          <h2>{museum.displayName}</h2>
+          {!museum.detailsFetched && isInfoWindowSelected && (
+            <div>Loading...</div>
+          )}
         </InfoWindow>
       )}
       <Pin

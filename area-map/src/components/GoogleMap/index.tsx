@@ -17,7 +17,11 @@ const GoogleMap = ({ location }: GoogleMapProps) => {
 
   return (
     location && (
-      <APIProvider apiKey={GOOGLE_MAPS_API_KEY} libraries={["places"]}>
+      <APIProvider
+        apiKey={GOOGLE_MAPS_API_KEY}
+        libraries={["places"]}
+        version='beta'
+      >
         <Map
           style={{ width: "100%", height: "100%" }}
           defaultCenter={{ lat: 22.54992, lng: 0 }}
